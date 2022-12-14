@@ -1,4 +1,8 @@
 package com.msusers.diego.service;
 
-public class IUserService {
+import com.msusers.diego.dto.CreateUserDto;
+import com.msusers.diego.dto.UserDto;
+
+public interface IUserService {
+     UserDto createUser(CreateUserDto createUserDto);
 }

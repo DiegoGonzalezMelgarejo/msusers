@@ -28,6 +28,6 @@ public class SwaggerConfiguration {
 
     private ApiInfo apiInfo() {
         Contact developer = new Contact("Diego Gonzalez", "https://www.linkedin.com/in/diegogonzalez97/", "diegoaliriogm@gmail.com");
-        return new ApiInfoBuilder().title("Calculator API").description("Diego Gonzalez ").contact(developer).version("1.0").build();
+        return new ApiInfoBuilder().title("MS - USER").description("Diego Gonzalez ").contact(developer).version("1.0").build();
     }
 }
