@@ -33,4 +33,5 @@ public class UserDto {
 
 
     private boolean isActive;
+    private String token;
 }

@@ -45,5 +45,7 @@ public class UserEntity {
     @Column(name = "isactive")
     private boolean isActive;
 
+    @Column(length = 1000)
+    private String token;
 
 }
