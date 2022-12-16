@@ -10,9 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@Getter
-@Setter
-@Builder
+@Data
 public class UserDto {
     private String id;
 

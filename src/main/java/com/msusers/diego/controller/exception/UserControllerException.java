@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@RestControllerAdvice
 public class UserControllerException {
     private static final String MESSAGE_ERROR = "Hubo un error,por favor contacte al administrador";
     private static final Map<String, Integer> RESPONSE_STATUS_HTTP = new HashMap<>();

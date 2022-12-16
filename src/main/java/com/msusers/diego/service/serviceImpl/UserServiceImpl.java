@@ -31,23 +31,20 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
     private CreateUserMapper createUserMapper;
-    @Autowired
     private UserDtoMapper userDtoMapper;
 
     @Autowired
-
     private IParameterRepository parameterRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     public UserServiceImpl(CreateUserMapper createUserMapper, IParameterRepository parameterRepository, UserRepository userRepository,UserDtoMapper userDtoMapper) {
-        this.createUserMapper = createUserMapper;
+        this.createUserMapper = CreateUserMapper.MAPPER;
         this.parameterRepository = parameterRepository;
         this.userRepository = userRepository;
-        this.userDtoMapper=userDtoMapper;
+        this.userDtoMapper=UserDtoMapper.MAPPER;
     }
 
 
@@ -67,26 +64,18 @@ public class UserServiceImpl implements IUserService {
     public List<UserDto> getAll() {
         List<UserEntity> userEntities=userRepository.findAll();
         List<UserDto> userDtos=userEntities.stream().map(userEntity->{
-           return userDtoMapper.entityToDto(userEntity);
+           return UserDtoMapper.MAPPER.entityToDto(userEntity);
         }).collect(Collectors.toList());
         return userDtos;
     }
 
     public UserDto formatUserDto(CreateUserDto createUserDto, UserEntity user) {
-        UserDto userDto = UserDto.builder().password(user.getPassword())
-                .name(user.getName())
-                .created(user.getCreated())
-                .lastLogin(user.getLastLogin())
-                .token(user.getToken())
-                .email(user.getEmail())
-                .id(user.getId())
-                .isActive(user.isActive())
-                .phones(createUserDto.getPhones()).build();
+        UserDto userDto =userDtoMapper.MAPPER.entityToDto(user);
         return userDto;
     }
 
     private UserEntity formatUserEntity(CreateUserDto createUserDto) {
-        UserEntity userEntity = createUserMapper.CreateDtoToEntity(createUserDto);
+        UserEntity userEntity = CreateUserMapper.MAPPER.CreateDtoToEntity(createUserDto);
         userEntity.setCreated(LocalDate.now());
         userEntity.setPassword(Utilities.encryptText(userEntity.getPassword()));
         userEntity.setLastLogin(LocalDate.now());

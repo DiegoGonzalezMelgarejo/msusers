@@ -124,6 +124,6 @@ public class UserServiceTest {
     }
 
     private UserDto getUserDto(){
-        return UserDto.builder().build();
+        return new UserDto();
     }
 }

@@ -117,12 +117,13 @@ public class UserControllerTest {
         List<PhoneDto> phoneDtos = new ArrayList<>();
         phoneDtos.add(phoneDto);
 
-        UserDto userDto = UserDto.builder().password("asdasdasd")
-                .email("asds").phones(phoneDtos).isActive(true)
-                .created(LocalDate.now())
-                .lastLogin(LocalDate.now())
-                .token("asd")
-                .name("asdas").build();
+        UserDto userDto =new UserDto();
+        userDto.setId("");
+        userDto.setEmail("");
+        userDto.setName("");
+        userDto.setToken("");
+        userDto.setLastLogin(LocalDate.now());
+        userDto.setPassword("asasdasd");
         return userDto;
     }
 
@@ -140,5 +141,10 @@ public class UserControllerTest {
         createUserDto.setPhones(phoneDtos);
         return createUserDto;
 
+    }
+
+    public static void main(String[] args) {
+        String a="xabbcacpqr";
+        
     }
 }
