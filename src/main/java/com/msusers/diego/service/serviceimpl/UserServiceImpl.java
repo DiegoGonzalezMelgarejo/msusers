@@ -13,12 +13,13 @@ import com.msusers.diego.repository.UserRepository;
 import com.msusers.diego.service.IUserService;
 import com.msusers.diego.utils.Utilities;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +28,8 @@ import java.util.stream.Collectors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import static com.msusers.diego.utils.Constanst.*;
-
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserServiceImpl implements IUserService {
 
 
@@ -51,13 +49,9 @@ public class UserServiceImpl implements IUserService {
     }
     @Override
     public UserDto createUser(CreateUserDto createUserDto) {
-        log.info("createUser ->>" , createUserDto.toString());
         String regedex = parameterRepository.findByName("password").getPattern();
-        if (!Utilities.isValid(createUserDto.getPassword(), Pattern.compile(regedex))){
-            log.error(ERROR_PASSWORD,"pattern-> " , regedex, " password -> ", createUserDto.getPassword());
-            throw new UserException(ERROR_PASSWORD);
-        }
-
+        if (!Utilities.isValid(createUserDto.getPassword(), Pattern.compile(regedex)))
+            throw new UserException("La contraseña no cumple con el parametro establecido");
         UserEntity userEntity = formatUserEntity(createUserDto);
         List<PhoneEntity> phoneEntities = getPhoneEntites(createUserDto.getPhones(), userEntity);
         userEntity.setPhones(phoneEntities);
@@ -65,9 +59,9 @@ public class UserServiceImpl implements IUserService {
         try {
             user  = userRepository.save(userEntity);
         }catch (DataIntegrityViolationException e){
-            throw  new UserException(ERROR_UNIQUE);
+            throw  new UserException("No se respeto un valor que debe ser unico, por favor revisar hay dos opciones(email , telefono).");
         }catch (Exception e){
-            throw  new UserException(ERROR_AL_CREAR_USUARIO);
+
         }
         return formatUserDto( user);
     }
