@@ -13,11 +13,11 @@ import java.util.Map;
 
 
 @RestControllerAdvice
-public class UserControllerException {
+public class UserControllerHandlerException {
     private static final String MESSAGE_ERROR = "Hubo un error,por favor contacte al administrador";
     private static final Map<String, Integer> RESPONSE_STATUS_HTTP = new HashMap<>();
 
-    public UserControllerException() {
+    public UserControllerHandlerException() {
         RESPONSE_STATUS_HTTP.put(MethodArgumentNotValidException.class.getSimpleName(), HttpStatus.BAD_REQUEST.value());
         RESPONSE_STATUS_HTTP.put(UserException.class.getSimpleName(), HttpStatus.BAD_REQUEST.value());
     }

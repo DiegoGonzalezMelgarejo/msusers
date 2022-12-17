@@ -11,22 +11,19 @@ import com.msusers.diego.mapper.CreateUserMapper;
 import com.msusers.diego.mapper.UserDtoMapper;
 import com.msusers.diego.repository.IParameterRepository;
 import com.msusers.diego.repository.UserRepository;
-import com.msusers.diego.service.serviceImpl.UserServiceImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import com.msusers.diego.service.serviceimpl.UserServiceImpl;
+
 import org.junit.jupiter.api.Assertions;
-
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserServiceTest {
+ class UserServiceTest {
 
     private CreateUserMapper createUserMapper;
 
@@ -35,40 +32,40 @@ public class UserServiceTest {
     private UserRepository userRepository;
     private UserServiceImpl userService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         createUserMapper = mock(CreateUserMapper.class);
         parameterRepository = mock(IParameterRepository.class);
         userRepository = mock(UserRepository.class);
         userDtoMapper=mock(UserDtoMapper.class);
-        this.userService= new UserServiceImpl(createUserMapper,parameterRepository,userRepository,userDtoMapper);
+        this.userService= new UserServiceImpl(parameterRepository,userRepository);
 
     }
     @Test
-    public void create_user_ok(){
+     void create_user_ok(){
        ParameterEntity parameterEntity=getParameterEntity();
         when(parameterRepository.findByName(any())).thenReturn(parameterEntity);
         CreateUserDto createUserDto= getCreateUserDto();
          UserEntity userEntity=getUserEntity();
-        when(createUserMapper.CreateDtoToEntity(any())).thenReturn(userEntity);
+        when(createUserMapper.createDtoToEntity(any())).thenReturn(userEntity);
         when(userRepository.save(any())).thenReturn(userEntity);
         UserDto user=userService.createUser(createUserDto);
-        Assert.assertNotNull(user);
+        Assertions.assertNotNull(user);
     }
     @Test
-    public void create_user_password_invalid(){
+     void create_user_password_invalid(){
         ParameterEntity parameterEntity=getParameterEntity();
         when(parameterRepository.findByName(any())).thenReturn(parameterEntity);
         CreateUserDto createUserDto= getCreateUserDto();
         createUserDto.setPassword("a");
         UserEntity userEntity=getUserEntity();
-        when(createUserMapper.CreateDtoToEntity(any())).thenReturn(userEntity);
+        when(createUserMapper.createDtoToEntity(any())).thenReturn(userEntity);
         when(userRepository.save(any())).thenReturn(userEntity);
         UserException userException= Assertions.assertThrows(UserException.class,()->{
             UserDto user=userService.createUser(createUserDto);
         });
 
-        Assert.assertEquals(userException.getMessage(),"La contraseña no cumple con el parametro establecido");
+        Assertions.assertNotNull(userException);
     }
     private ParameterEntity getParameterEntity(){
         ParameterEntity parameterEntity= new ParameterEntity();
@@ -114,13 +111,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getAll_success_ok(){
+     void getAll_success_ok(){
         List<UserEntity> userEntities= new ArrayList<>();
         userEntities.add(getUserEntity());
         when(userRepository.findAll()).thenReturn(userEntities);
         when(userDtoMapper.entityToDto(any())).thenReturn(getUserDto());
-        List<UserDto> userDtos=userService.getAll();
-        Assert.assertEquals(userDtos.size(),1);
+        Assertions.assertEquals(1,userService.getAll());
     }
 
     private UserDto getUserDto(){

@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Utilities {
+    private Utilities() {
+    }
 
     public static final String encryptText(String text){
         BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();

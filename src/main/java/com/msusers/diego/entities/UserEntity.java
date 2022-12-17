@@ -2,7 +2,6 @@ package com.msusers.diego.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +18,7 @@ import java.util.List;
 @Data
 @Table(name = "users")
 public class UserEntity {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -28,7 +28,6 @@ public class UserEntity {
     private String id;
 
     private String name;
-
 
     @Column(unique = true)
     private String email;

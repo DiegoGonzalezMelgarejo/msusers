@@ -1,4 +1,4 @@
-package com.msusers.diego.service.serviceImpl;
+package com.msusers.diego.service.serviceimpl;
 
 import com.msusers.diego.dto.CreateUserDto;
 import com.msusers.diego.dto.PhoneDto;
@@ -7,7 +7,6 @@ import com.msusers.diego.entities.PhoneEntity;
 import com.msusers.diego.entities.UserEntity;
 import com.msusers.diego.exception.UserException;
 import com.msusers.diego.mapper.CreateUserMapper;
-
 import com.msusers.diego.mapper.UserDtoMapper;
 import com.msusers.diego.repository.IParameterRepository;
 import com.msusers.diego.repository.UserRepository;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -26,13 +24,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 @Service
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements IUserService {
 
-    private CreateUserMapper createUserMapper;
-    private UserDtoMapper userDtoMapper;
+
+
 
     @Autowired
     private IParameterRepository parameterRepository;
@@ -40,11 +38,11 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserServiceImpl(CreateUserMapper createUserMapper, IParameterRepository parameterRepository, UserRepository userRepository,UserDtoMapper userDtoMapper) {
-        this.createUserMapper = CreateUserMapper.MAPPER;
+    public UserServiceImpl( IParameterRepository parameterRepository, UserRepository userRepository) {
+
         this.parameterRepository = parameterRepository;
         this.userRepository = userRepository;
-        this.userDtoMapper=UserDtoMapper.MAPPER;
+
     }
 
 
@@ -57,25 +55,23 @@ public class UserServiceImpl implements IUserService {
         List<PhoneEntity> phoneEntities = getPhoneEntites(createUserDto.getPhones(), userEntity);
         userEntity.setPhones(phoneEntities);
         UserEntity user = userRepository.save(userEntity);
-        return formatUserDto(createUserDto, user);
+        return formatUserDto( user);
     }
 
     @Override
     public List<UserDto> getAll() {
         List<UserEntity> userEntities=userRepository.findAll();
-        List<UserDto> userDtos=userEntities.stream().map(userEntity->{
-           return UserDtoMapper.MAPPER.entityToDto(userEntity);
-        }).collect(Collectors.toList());
-        return userDtos;
+        return userEntities.stream().map(UserDtoMapper.MAPPER::entityToDto).collect(Collectors.toList());
+
     }
 
-    public UserDto formatUserDto(CreateUserDto createUserDto, UserEntity user) {
-        UserDto userDto =userDtoMapper.MAPPER.entityToDto(user);
-        return userDto;
+    public UserDto formatUserDto( UserEntity user) {
+       return UserDtoMapper.MAPPER.entityToDto(user);
+
     }
 
     private UserEntity formatUserEntity(CreateUserDto createUserDto) {
-        UserEntity userEntity = CreateUserMapper.MAPPER.CreateDtoToEntity(createUserDto);
+        UserEntity userEntity = CreateUserMapper.MAPPER.createDtoToEntity(createUserDto);
         userEntity.setCreated(LocalDate.now());
         userEntity.setPassword(Utilities.encryptText(userEntity.getPassword()));
         userEntity.setLastLogin(LocalDate.now());
