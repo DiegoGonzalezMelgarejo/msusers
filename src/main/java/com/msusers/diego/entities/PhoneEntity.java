@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "phone" ,uniqueConstraints=
-@UniqueConstraint(columnNames={"number", "cityCode","contryCode"}))
+@UniqueConstraint(columnNames={"number", "city_code","country_code"}))
 @Getter
 @Setter
 
@@ -28,7 +29,9 @@ public class PhoneEntity {
     )
     private String id;
     private String number;
+    @Column(name = "city_code")
     private String cityCode;
+    @Column(name = "country_code")
     private String contryCode;
 
     @ManyToOne

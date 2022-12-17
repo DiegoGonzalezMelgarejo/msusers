@@ -116,7 +116,7 @@ import static org.mockito.Mockito.when;
         userEntities.add(getUserEntity());
         when(userRepository.findAll()).thenReturn(userEntities);
         when(userDtoMapper.entityToDto(any())).thenReturn(getUserDto());
-        Assertions.assertEquals(1,userService.getAll());
+        Assertions.assertEquals(1,userService.getAll().size());
     }
 
     private UserDto getUserDto(){

@@ -14,9 +14,12 @@ import com.msusers.diego.service.IUserService;
 import com.msusers.diego.utils.Utilities;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -44,8 +47,6 @@ public class UserServiceImpl implements IUserService {
         this.userRepository = userRepository;
 
     }
-
-
     @Override
     public UserDto createUser(CreateUserDto createUserDto) {
         String regedex = parameterRepository.findByName("password").getPattern();
@@ -54,7 +55,14 @@ public class UserServiceImpl implements IUserService {
         UserEntity userEntity = formatUserEntity(createUserDto);
         List<PhoneEntity> phoneEntities = getPhoneEntites(createUserDto.getPhones(), userEntity);
         userEntity.setPhones(phoneEntities);
-        UserEntity user = userRepository.save(userEntity);
+        UserEntity user=null ;
+        try {
+            user  = userRepository.save(userEntity);
+        }catch (DataIntegrityViolationException e){
+            throw  new UserException("No se respeto un valor que debe ser unico, por favor revisar hay dos opciones(email , telefono).");
+        }catch (Exception e){
+
+        }
         return formatUserDto( user);
     }
 
